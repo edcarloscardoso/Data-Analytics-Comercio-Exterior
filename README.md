@@ -56,4 +56,4 @@ Após a junção dos dados, foram removidas as colunas que não eram mais necess
 `drop(columns=['cd_pais', 'CO_PAIS_ISON3', ...])`.  
 
 ## 7. Exportação do Arquivo Final  
-O dataset tratado foi **salvo** na pasta **silver** no formato **CSV**, sem o índice, garantindo compatibilidade para uso posterior.  
+O dataset tratado foi **salvo** seguindo a arquitetura de medalão no formato **CSV**, sem o índice, garantindo compatibilidade para uso posterior.  Arquitetura Medalhão é um conceito que processa dados em três camadas de qualidade, preservando o histórico de dados.   
