@@ -22,38 +22,37 @@ Para mais detalhes, consulte o site oficial:
 
 ---
 
-# Principais Alterações  
+# Principais Alterações  / Processamento de Dados  
 
 ## 1. Leitura dos Arquivos CSV  
-Foram carregados arquivos **CSV** contendo dados de exportação e tabelas auxiliares, como **países**, **unidades de referência fiscal (URF)** e **códigos NCM**.  
-- O **encoding** foi definido como `latin1` para lidar com caracteres especiais.  
-- O **separador** dos arquivos foi definido como `;`.  
+Os dados foram carregados a partir de arquivos **CSV**, incluindo informações de exportação e tabelas auxiliares, como **países**, **unidades de referência fiscal (URF)** e **códigos NCM**.  
+- O **encoding** foi definido como `latin1` para garantir compatibilidade com caracteres especiais.  
+- O **separador** adotado foi `;`, conforme o formato dos arquivos de origem.  
 
 ## 2. Padronização de Tipos de Dados  
-As colunas-chave utilizadas para junção, como:  
-- `cd_pais`, `CO_PAIS`, `cd_urf`, `CO_URF`, `cd_ncm`, `CO_NCM`  
-
-foram convertidas para **string** para garantir compatibilidade durante os merges.  
+Para evitar inconsistências durante as junções, as colunas-chave foram convertidas para **string** utilizando a função `astype()`, garantindo compatibilidade nos merges. Exemplos de colunas padronizadas:  
+- `cd_pais`, `CO_PAIS`, `cd_urf`, `CO_URF`, `cd_ncm`, `CO_NCM`.  
 
 ## 3. Junção de Dados  
-Realizou-se o **merge** entre os datasets principais e as tabelas auxiliares para substituir códigos numéricos por **nomes mais descritivos**.  
+Os dados foram combinados utilizando a função `merge()`, permitindo a substituição de códigos numéricos por **descrições mais compreensíveis**. A junção foi realizada no formato **left join**, preservando todos os registros do dataset principal.  
 
-## 4. Renomeação e Padronização de Colunas  
-As colunas foram padronizadas para:  
-- Converter os nomes para **lowercase**.  
-- Remover espaços extras utilizando `.strip()`.  
-- Substituir espaços internos por **_**.  
+## 4. Padronização de Nomes de Colunas  
+As colunas foram renomeadas e padronizadas para manter uniformidade:  
+- **Conversão para lowercase** com a função `str.lower()`, garantindo um padrão único.  
+- **Remoção de espaços extras** com `str.strip()` para evitar inconsistências.  
+- **Substituição de espaços internos por `_`** para facilitar manipulação no código.  
 
-Exemplo de mudanças de nomes:  
+A padronização foi aplicada de forma automatizada em todas as colunas relevantes.  
+
+Exemplos de renomeação:  
 - `'NO_PAIS'` → `'cd_pais'`  
 - `'NO_NCM_POR'` → `'cd_ncm'`  
 
 ## 5. Limpeza de Dados  
-A limpeza de dados incluiu a remoção de valores **nulos** e **duplicados**, além da correção de inconsistências de formato.  
+Foram removidos valores **nulos** e **duplicados** utilizando as funções `dropna()` e `drop_duplicates()`, além da correção de formatações inconsistentes.  
 
 ## 6. Remoção de Colunas Desnecessárias  
-Após a junção dos dados, foram removidas as colunas que não eram mais necessárias para a análise, como por exemplo:  
-`drop(columns=['cd_pais', 'CO_PAIS_ISON3', ...])`.  
+Após a junção dos dados, colunas que não eram mais relevantes foram removidas utilizando a função `drop()`. Esse processo eliminou códigos e identificadores que já haviam sido substituídos por descrições mais compreensíveis.  
 
 ## 7. Exportação do Arquivo Final  
-O dataset tratado foi **salvo** seguindo a arquitetura de medalão no formato **CSV**, sem o índice, garantindo compatibilidade para uso posterior.  Arquitetura Medalhão é um conceito que processa dados em três camadas de qualidade, preservando o histórico de dados.   
+O dataset tratado foi **salvo** no formato **CSV**, sem índice, utilizando a função `to_csv()`. O armazenamento seguiu a **Arquitetura de Medalhão**, garantindo organização em camadas de qualidade e preservação do histórico de dados para futuras análises.  
