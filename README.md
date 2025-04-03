@@ -1,58 +1,88 @@
-# Objetivo  
+# Data Analytics Comercio Exterior
 
-Este projeto tem como **objetivo** processar e organizar os dados de exportação, realizando a **limpeza**, **padronização** e **junção** de informações provenientes de diferentes fontes.  
+## Objetivo  
+Este projeto tem como objetivo processar e organizar dados de exportacao, seguindo a **Arquitetura de Medalhao** para estruturar as informacoes em diferentes camadas de qualidade. O processamento envolve **limpeza, padronizacao e juncao de dados** provenientes de diversas fontes, garantindo maior confiabilidade para analises futuras.  
 
-Primeiramente, utilizei **WSL2** para criar uma pasta de trabalho, dentro da qual criei um ambiente Python. Após ativar o ambiente virtual (.venv), executei o comando `code .` para abrir o **VSCode**.  
+## Configuracao do Ambiente  
+Para a execucao do projeto, utilizei o **WSL2** para criar um ambiente de trabalho, configurando um ambiente virtual Python com o seguinte fluxo:  
 
-Utilizei a biblioteca **Requests** para importar os arquivos que necessitam de manipulação.  
+1. Criar e ativar o ambiente virtual:  
+   ```sh
+   python -m venv .venv
+   source .venv/bin/activate  # Linux/WSL2
+   .venv\Scripts\activate  # Windows
+   ```  
+2. Abrir o projeto no **VS Code**:  
+   ```sh
+   code .
+   ```  
+3. Instalar as dependencias necessarias, incluindo a biblioteca `requests` para importacao de arquivos:  
+   ```sh
+   pip install requests pandas
+   ```  
 
----  
+## Fonte de Dados  
+Os dados utilizados neste projeto foram obtidos da **base publica do Ministerio da Industria, Comercio Exterior e Servicos (MDIC)**, disponivel no site oficial do governo brasileiro.  
 
-# Fonte de Dados  
+### **Bases utilizadas:**  
+- **NCM (Nomenclatura Comum do Mercosul):** dados de 2023 e 2024.  
+- **SH4 (Sistema Harmonizado de Designacao e Codificacao de Mercadorias):** dados de 2023 e 2024.  
 
-Os dados utilizados neste projeto foram retirados da base de dados pública do **Ministério da Indústria, Comércio Exterior e Serviços (MDIC)**, disponível no site oficial do governo brasileiro.  
+Essas bases contem informacoes detalhadas sobre o comercio exterior brasileiro, incluindo categorias de mercadorias e volumes de exportacao/importacao.  
 
-- **Base de Dados NCM (Nomenclatura Comum do Mercosul):** Dados referentes aos anos **2023** e **2024**.  
-- **Base de Dados SH4 (Sistema Harmonizado de Designação e Codificação de Mercadorias):** Dados referentes aos anos **2023** e **2024**.  
+Para mais detalhes, acesse o site oficial: **[Base de Dados Bruta do MDIC](#)**.  
 
-Essas bases contêm informações detalhadas sobre o comércio exterior brasileiro, incluindo dados de **exportações** e **importações**, com categorização das mercadorias com base nos códigos **NCM** e **SH4**.  
+## Processamento de Dados  
+A estruturacao e limpeza dos dados seguiram as seguintes etapas:  
 
-Para mais detalhes, consulte o site oficial:  
-[Base de Dados Bruta do MDIC](https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta)  
+### **1: Leitura dos Arquivos CSV**  
+- Os dados foram carregados a partir de arquivos CSV contendo informacoes de exportacao e tabelas auxiliares (paises, unidades de referencia fiscal - URF, codigos NCM).  
+- Configuracoes aplicadas:  
+  - **Encoding:** `latin1` (para evitar problemas com caracteres especiais).  
+  - **Separador:** `;` (padrao dos arquivos originais).  
 
----
+### **2: Padronizacao de Tipos de Dados**  
+Para evitar inconsistencias nas juncoes, as colunas-chave foram convertidas para `string` usando `astype()`. Exemplos:  
+```python
+df["cd_pais"] = df["cd_pais"].astype(str)
+df["cd_urf"] = df["cd_urf"].astype(str)
+df["cd_ncm"] = df["cd_ncm"].astype(str)
+```  
 
-# Principais Alterações  / Processamento de Dados  
+### **3: Juncao de Dados**  
+Os datasets foram combinados utilizando `merge()`, substituindo codigos numericos por descricoes compreensiveis.  
+- A juncao foi realizada com **left join**, preservando os registros do dataset principal.  
+```python
+df_merged = df1.merge(df2, on="cd_pais", how="left")
+```  
 
-## 1. Leitura dos Arquivos CSV  
-Os dados foram carregados a partir de arquivos **CSV**, incluindo informações de exportação e tabelas auxiliares, como **países**, **unidades de referência fiscal (URF)** e **códigos NCM**.  
-- O **encoding** foi definido como `latin1` para garantir compatibilidade com caracteres especiais.  
-- O **separador** adotado foi `;`, conforme o formato dos arquivos de origem.  
+### **4: Padronizacao de Nomes de Colunas**  
+- **Conversao para minusculas:** `str.lower()`  
+- **Remocao de espacos extras:** `str.strip()`  
+- **Substituicao de espacos internos por `_`:**  
+```python
+df.columns = df.columns.str.lower().str.strip().str.replace(" ", "_")
+```  
 
-## 2. Padronização de Tipos de Dados  
-Para evitar inconsistências durante as junções, as colunas-chave foram convertidas para **string** utilizando a função `astype()`, garantindo compatibilidade nos merges. Exemplos de colunas padronizadas:  
-- `cd_pais`, `CO_PAIS`, `cd_urf`, `CO_URF`, `cd_ncm`, `CO_NCM`.  
+Exemplo de renomeacao:  
+```python
+df.rename(columns={"NO_PAIS": "cd_pais", "NO_NCM_POR": "cd_ncm"}, inplace=True)
+```  
 
-## 3. Junção de Dados  
-Os dados foram combinados utilizando a função `merge()`, permitindo a substituição de códigos numéricos por **descrições mais compreensíveis**. A junção foi realizada no formato **left join**, preservando todos os registros do dataset principal.  
+### **5: Limpeza de Dados**  
+- Remocao de valores nulos: `dropna()`.  
+- Exclusao de registros duplicados: `drop_duplicates()`.  
 
-## 4. Padronização de Nomes de Colunas  
-As colunas foram renomeadas e padronizadas para manter uniformidade:  
-- **Conversão para lowercase** com a função `str.lower()`, garantindo um padrão único.  
-- **Remoção de espaços extras** com `str.strip()` para evitar inconsistências.  
-- **Substituição de espaços internos por `_`** para facilitar manipulação no código.  
+### **6: Remocao de Colunas Desnecessarias**  
+Apos a juncao dos dados, foram removidas colunas que nao eram mais relevantes:  
+```python
+df.drop(columns=["CO_PAIS", "CO_URF"], inplace=True)
+```  
 
-A padronização foi aplicada de forma automatizada em todas as colunas relevantes.  
+### **7: Exportacao do Arquivo Final**  
+O dataset tratado foi salvo no formato CSV, sem indice, garantindo a organizacao dos dados:  
+```python
+df.to_csv("dados_processados.csv", index=False, sep=";")
+```  
+A exportacao segue os principios da **Arquitetura de Medalhao**, organizando os dados em camadas de qualidade. A proxima etapa do projeto sera a implementacao da **camada Gold**, consolidando as informacoes para analises avancadas e dashboards.  
 
-Exemplos de renomeação:  
-- `'NO_PAIS'` → `'cd_pais'`  
-- `'NO_NCM_POR'` → `'cd_ncm'`  
-
-## 5. Limpeza de Dados  
-Foram removidos valores **nulos** e **duplicados** utilizando as funções `dropna()` e `drop_duplicates()`, além da correção de formatações inconsistentes.  
-
-## 6. Remoção de Colunas Desnecessárias  
-Após a junção dos dados, colunas que não eram mais relevantes foram removidas utilizando a função `drop()`. Esse processo eliminou códigos e identificadores que já haviam sido substituídos por descrições mais compreensíveis.  
-
-## 7. Exportação do Arquivo Final  
-O dataset tratado foi **salvo** no formato **CSV**, sem índice, utilizando a função `to_csv()`. O armazenamento seguiu a **Arquitetura de Medalhão**, garantindo organização em camadas de qualidade e preservação do histórico de dados para futuras análises.  
