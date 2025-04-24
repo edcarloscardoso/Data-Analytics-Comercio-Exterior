@@ -111,13 +111,23 @@ df_exportacao = pd.concat([df1, df2]).reset_index().sort_values(['cd_pais'])
 
 ```
 Data-Analytics-Comercio-Exterior/
-│
 ├── datalake/
-│   ├── raw_data/
+│   ├── gold/
 │   ├── landing/
-│   ├── silver/
-│   └── gold/
-├── scripts/              # (Opcional)
+│   ├── raw_data/
+│   └── silver/
+├── workflow/
+│   ├── ingestion/
+│   └── process/
+│       ├── bronze/
+│       │   ├── exportacao/
+│       │   └── importacao/
+│       ├── gold/
+│       └── silver/
+│           ├── exportacao_silver/
+│           ├── importacao_silver/
+│           └── transformacao_data_gold/
+├── ingestao.md
 └── README.md
 ```
 
