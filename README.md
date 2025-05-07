@@ -99,11 +99,28 @@ df.drop_duplicates(inplace=True)
 - Padronização geral das colunas e eliminação de colunas desnecessárias.
 
 ### 🟢 GOLD
-- Consolidação dos dados com uso de `concat()`:
-```python
-df_exportacao = pd.concat([df1, df2]).reset_index().sort_values(['cd_pais'])
-```
-- Agrupamento final por país, pronto para uso em dashboards e análises avançadas.
+- Consolidação dos dados: Junção dos dados de exportação e importação de diferentes anos e fontes, usando pd.concat(), resultando em tabelas mestre consolidadas para cada fluxo.
+- Enriquecimento e Agregação: Aplicação de transformações finais e agregações para gerar conjuntos de dados prontos para análise e visualização. Isso inclui:
+- Agrupamento por entidades chave: Agregações por país, NCM, via de transporte, etc.
+- Cálculo de métricas: Soma de valores FOB, peso líquido, e outras medidas relevantes.
+- Criação de indicadores: Cálculo de médias percentuais (ex: frete/seguro sobre valor FOB).
+
+Geração de Insights Chave:
+
+Exportação:
+- Top Produtos por Valor (FOB): Identificação dos produtos (NCM) que geraram maior receita em dólares FOB.
+- Evolução Mensal das Exportações: Análise do volume (kg) e valor (USD) total das exportações ao longo do tempo.
+- Modal de Transporte: Distribuição e importância das diferentes vias de transporte utilizadas.
+- Exportações por Localidade: Soma do valor e peso das exportações originadas de diferentes municípios e estados.
+- Volume Exportado por NCM: Total de peso (kg) exportado para cada categoria de produto.
+
+Importação:
+- Importação por Estado e Ano: Análise do valor total importado por unidade federativa ao longo dos anos.
+- Top Produtos Importados por Valor (FOB): Identificação dos produtos (NCM) com maior valor de importação.
+- Percentual de Frete e Seguro: Cálculo da média percentual dos custos de frete e seguro em relação ao valor FOB da importação.
+- Principais Países Fornecedores: Identificação dos países com maior valor total de importação.
+- Evolução Mensal das Importações: Análise do volume e valor total das importações ao longo do tempo.
+- Os dados nesta camada estão limpos, estruturados e agregados, prontos para consumo por ferramentas de BI, dashboards e análises mais aprofundadas.
 
 ---
 
@@ -136,13 +153,11 @@ Data-Analytics-Comercio-Exterior/
 ## 💡 Melhorias Futuras
 - Implementação de dashboards interativos
 - Conexão com ferramentas de BI (Power BI, Metabase, Plotly)
-- Aplicação de análises exploratórias e preditivas
 
 ---
 
 ## 📌 Status Atual
-- ✅ Raw, Landing e Silver concluídos
-- 🔄 Gold em desenvolvimento (exportação e importação já estruturadas)
+- ✅ Raw, Landing, Silver e Gold concluídos
 
 ---
 
