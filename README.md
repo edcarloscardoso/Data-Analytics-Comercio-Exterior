@@ -30,6 +30,8 @@ Os dados utilizados neste projeto foram obtidos da **base pública do Ministéri
 
 Essas bases contêm informações detalhadas sobre o comércio exterior brasileiro, como categorias de mercadorias, unidades de medida, e destinos.
 
+https://www.gov.br/mdic/pt-br/assuntos/comercio-exterior/estatisticas/base-de-dados-bruta
+
 ---
 
 ## 🧪 Processamento e Transformações
