@@ -152,14 +152,62 @@ Data-Analytics-Comercio-Exterior/
 
 ---
 
+## 💡 Automatização de carregagamento de arquivos
+- Fiz um script que automatiza o processo de carregamento de arquivos .csv de uma pasta local para um banco de dados PostgresSQL.
+
+
+### 🔹 Listagem e Leitura dos Arquivos CSV
+
+A automação inicia com a varredura da pasta `datalake/gold`, onde ficam armazenados os arquivos `.csv` prontos para carga. Utilizamos a biblioteca `os` para identificar os arquivos e garantir que apenas arquivos válidos fossem processados.
+
+A leitura dos dados é feita com a biblioteca `pandas`, com foco inicial em uma amostra parcial de cada arquivo (cerca de 100 linhas), apenas para detectar a estrutura das colunas. Isso permitiu criar a tabela no banco de dados antes de inserir os dados por completo. Para garantir a correta interpretação de caracteres especiais, foi utilizado o encoding `latin1`.
+
+---
+
+### 🔹 Criação das Tabelas no Banco de Dados
+
+Antes da carga completa, é necessário garantir que o banco esteja preparado para receber os dados. A biblioteca `SQLAlchemy` foi empregada para criar as tabelas no PostgreSQL de forma dinâmica, baseando-se no cabeçalho de cada CSV.
+
+As colunas foram padronizadas como texto (`string`) para evitar conflitos de tipo e permitir maior flexibilidade nos dados. O nome de cada tabela é gerado automaticamente com base no nome do arquivo correspondente. Se a tabela já existir, ela é substituída — uma abordagem simples e eficaz para manter os dados atualizados.
+
+---
+
+### 🔹 Carga Otimizada dos Dados com COPY
+
+Para a etapa de inserção dos dados, foi utilizada a biblioteca `psycopg2`, que permite acesso direto ao banco PostgreSQL via Python. O destaque aqui é o uso do comando nativo `COPY`, uma das formas mais rápidas e eficientes de carregar grandes volumes de dados em uma tabela.
+
+Essa abordagem foi escolhida por sua performance superior em comparação a inserções tradicionais linha a linha. O comando `COPY` lê diretamente o conteúdo do arquivo `.csv` e insere no banco, respeitando o cabeçalho e a estrutura da tabela previamente criada.
+
+---
+
+### 🔹 Controle de Transações e Tratamento de Erros
+
+Cada carga de arquivo é envolvida em uma transação. Caso ocorra qualquer erro durante o processo, a operação é revertida automaticamente com `rollback`, mantendo a integridade do banco de dados. 
+
+Com isso, mesmo que um arquivo apresente problemas, os demais continuam sendo processados normalmente — uma estratégia importante para ambientes de dados em produção.
+
+---
+
+### 🔹 Encerramento e Feedback
+
+Após o processamento de todos os arquivos, a conexão com o banco de dados é encerrada corretamente. O script fornece mensagens no terminal indicando o andamento e a conclusão de cada etapa, facilitando o acompanhamento da carga.
+
+---
+
+Este processo garante uma automação robusta, segura e escalável para inserção de dados no PostgreSQL, aproveitando o melhor de ferramentas como `pandas`, `SQLAlchemy` e `psycopg2`.
+
+Com esse processo foi possível conectar o banco de dado com a ferramenta de Business Intelligence (BI) open-source para exploração, visualização e compartilhamento dos dados.
+
+---
+
 ## 💡 Melhorias Futuras
 - Implementação de dashboards interativos
-- Conexão com ferramentas de BI (Power BI, Metabase, Plotly)
+- Conexão com ferramentas de BI (Power BI e Metabase)
 
 ---
 
 ## 📌 Status Atual
-- ✅ Raw, Landing, Silver e Gold concluídos
+- ✅ Raw, Landing, Silver, Gold concluídos e automatição com banco de dados.
 
 ---
 
