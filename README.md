@@ -200,14 +200,37 @@ Com esse processo foi possível conectar o banco de dado com a ferramenta de Bus
 
 ---
 
+## 🔹 Dashboard - Visualização dos dados
+
+Realizei uma análise visual detalhada no Power BI, onde desenvolvi 6 dashboards interativos com medidas criadas via DAX, permitindo uma navegação fluida e profunda pelos dados.
+
+🔍 Principais insights dos dashboards:
+📊 Exportação:
+
+Visão geral com filtros por ano, trimestre e mês
+
+Top 10 países de destino por valor FOB (US$)
+
+Comparativo entre China e EUA (valor FOB, peso líquido, desvio padrão)
+
+Total de produtos por estado, tipo de transporte e país de destino
+
+📥 Importação:
+
+Indicadores financeiros e logísticos: valor FOB, CIF, frete, seguro, peso líquido
+
+Produtos mais importados por volume e valor
+
+Participação por estado e análise por produto específico (custo médio, valor médio por operação)
+
+
 ## 💡 Melhorias Futuras
-- Implementação de dashboards interativos
-- Conexão com ferramentas de BI (Power BI e Metabase)
+- Promever melhorias e integração com outras Tecnologias
 
 ---
 
 ## 📌 Status Atual
-- ✅ Raw, Landing, Silver, Gold concluídos e automatição com banco de dados.
+- ✅ Raw, Landing, Silver, Gold, automatição com banco de dados e Dashboards concluídos.
 
 ---
 
